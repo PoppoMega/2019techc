@@ -7,7 +7,7 @@ $image_path = null;
 
 //$sth=$dbh->prepare('SELECT name, body, created_at, filename FROM bbs ORDER BY id ASC');
  //アイコン情報を取得
-$sth=$dbh->prepare('SELECT filename FROM login WHERE name = ?');
+$sth=$dbh->prepare('SELECT profile_image_file FROM login WHERE name = ?');
 $params = [];	
 $params[] = $_SESSION['login_user'];
 $sth->execute($params);
@@ -25,8 +25,8 @@ $pro_rows = $sth->fetchAll();
 <?php foreach($pro_rows as $row): ?>
 <div>
 
-<?php if(!empty($row['filename'])) { ?>
-	<p> <img src="/static/profile_images/<?php echo $row['filename']; ?>" height="50px"></p>
+<?php if(!empty($row['profile_image_file'])) { ?>
+	<p> <img src="/static/profile_images/<?php echo $row['profile_image_file']; ?>" height="50px"></p>
 <?php } ?>
 </div>
 <?php endforeach; ?>
@@ -38,11 +38,11 @@ $pro_rows = $sth->fetchAll();
 </form> 
 </div>
 <?php 
-//行の中身を取得i
+//の中身を取得i
 $dbh2 = new PDO('mysql:host=database-1.chequt3mp7ws.us-east-1.rds.amazonaws.com;dbname=bord','admin','t38byuao20');
 
 //掲示板情報を取得
-$sth=$dbh2->prepare('SELECT name, body, created_at, filename FROM bbs ORDER BY id ASC');
+$sth=$dbh2->prepare('SELECT bbs.name, bbs.body, bbs.created_at, bbs.filename FROM bord.bbs LEFT OUTER JOIN user.login ON bord.bbs.id = user.login.id');
 $sth->execute();
 $rows = $sth->fetchALL();
 //var_dump($rows);

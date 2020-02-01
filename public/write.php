@@ -13,8 +13,7 @@ if($upload_image['size'] > 0){
 		print("画像以外はいれるな");
 		return;
 	}
-
-
+	
 //拡張しを取得
 $ext = pathinfo($upload_image['name'], PATHINFO_EXTENSION);
 //ファイル名決め
@@ -45,6 +44,7 @@ $insert_sth->execute(array(
     ':body' => $_POST['body'],
     ':filename' => $image_filename,
 ));
+
 
 // 投稿が完了したので閲覧画面に飛ばす
 header("HTTP/1.1 303 See Other");

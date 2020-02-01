@@ -14,8 +14,9 @@ if(null !== $_SESSION['login_user']){
 	//表示用のパスを設定して突っ込む	
 	move_uploaded_file($upload_image['tmp_name'],$image_filepath);
 	
-	$username = $_SESSION['login_user'];
-	
+	$_SESSION['image_file'] = $_SESSION['login_user'];
+
+	$user_name = $_SESSION['login_user'] ;	
 	//DB接続
 	$dbh = new PDO('mysql:host=database-1.chequt3mp7ws.us-east-1.rds.amazonaws.com;dbname=user','admin','t38byuao20');
 	$image_path = null;
@@ -24,20 +25,18 @@ if(null !== $_SESSION['login_user']){
 	
 	$select_id = $dbh->prepare('SELECT id FROM login WHERE name = (:name)');
 	$select_id->execute(array(
-		':name' => $_SESSION['login_user'],
+		':name' => $user_name,
 	));
-	$id = $select_id->fetchAll();
-	$user_id = $id[0];
-	
+	$id = $select_id->fetchAll();	
 //	var_dump($id[0]);
 //	var_dump($user_id);
 //exit();	
 	//画像を入れ込む
-	$insert_sth = $dbh->prepare('UPDATE login SET filename=(:filename) WHERE name = (:name)');
+	$insert_sth = $dbh->prepare('UPDATE login SET profile_image_file=(:filename) WHERE name = (:name)');
 	//INSERT
 	$insert_sth->execute(array(
 		':filename' => $image_filename,
-		':name' => $_SESSION['login_user'],
+		':name' => $user_name,
 	));
 	//処理が完了したので戻す
 //	var_dump($insert_sth);

@@ -21,16 +21,16 @@ $dbh = new PDO('mysql:host=database-1.chequt3mp7ws.us-east-1.rds.amazonaws.com;d
 $dbh2 = new  PDO('mysql:host=database-1.chequt3mp7ws.us-east-1.rds.amazonaws.com;dbname=bord','admin','t38byuao20');
 
 //行の中身取得
-$sth=$dbh2->prepare('SELECT name, body, created_at, filename FROM bbs ORDER BY id ASC');
+$sth=$dbh2->prepare(
+	'SELECT x.name, x.body, x.created_at, x.filename, y.profile_image_file 
+	FROM bord.bbs as x
+	LEFT OUTER JOIN user.login as y ON x.name = y.name'
+);
+
 $sth->execute();
 $rows = $sth->fetchAll();
-//アイコン情報を取得
-$sth=$dbh->prepare('SELECT filename FROM login WHERE name = ?');
-$params = [];
-$params[] = $_SESSION['login_user'];
-$sth->execute($params);
 
-$pro_rows = $sth->fetchAll();
+//var_dump($rows);
 ?>
 <?php  foreach($rows as $row): ?>
 
@@ -39,14 +39,10 @@ $pro_rows = $sth->fetchAll();
 	(登校日: <?php echo $row['created_at']; ?>)
 	</span>
 	
-	<?php foreach($pro_rows as $row2): ?>
 	<div>
-	<?php if(!empty($row2['filename'])) { ?>
-		<p> <img src="/static/profile_images/<?php echo $row2['filename']; ?>" height="20px"></p>
+	<?php if(!empty($row['profile_image_file'])) { ?>
+		<p> <img src="/static/profile_images/<?php echo $row['profile_image_file']; ?>" height="20px"></p>
 	<?php } ?>
-	</div>
-
-	<?php endforeach; ?>
 
 	<p><?php echo $row['body']; ?></p>
 	<?php if(!empty($row['filename'])) { ?>
