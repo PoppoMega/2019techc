@@ -10,7 +10,7 @@ if(null !== $_SESSION['login_user']){
 	//ファイル名決め	
 	$image_filename=uniqid().".".$ext;
 	//パス決め
-	$image_filepath = '/src/2019techc/public/static/profile_images'.$image_filename;
+	$image_filepath = '/src/2019techc/public/static/profile_images/'.$image_filename;
 	//表示用のパスを設定して突っ込む	
 	move_uploaded_file($upload_image['tmp_name'],$image_filepath);
 	
@@ -27,16 +27,20 @@ if(null !== $_SESSION['login_user']){
 		':name' => $_SESSION['login_user'],
 	));
 	$id = $select_id->fetchAll();
-//	var_dump($id);
+	$user_id = $id[0];
+	
+//	var_dump($id[0]);
+//	var_dump($user_id);
 //exit();	
 	//画像を入れ込む
-	$insert_sth = $dbh->prepare('INSERT INTO login (filename) VALUES (:filename) WHERE id = (:id)');
+	$insert_sth = $dbh->prepare('UPDATE login SET filename=(:filename) WHERE name = (:name)');
 	//INSERT
 	$insert_sth->execute(array(
 		':filename' => $image_filename,
-		':id' => $id,
+		':name' => $_SESSION['login_user'],
 	));
 	//処理が完了したので戻す
+//	var_dump($insert_sth);
 	header("Location: ./profile.php");
 }else{
 	header("Location: ./profile.php");
