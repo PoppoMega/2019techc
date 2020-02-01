@@ -26,7 +26,7 @@ $pro_rows = $sth->fetchAll();
 <div>
 
 <?php if(!empty($row['profile_image_file'])) { ?>
-	<p> <img src="/static/profile_images/<?php echo $row['profile_image_file']; ?>" height="50px"></p>
+	<p> <img src="/static/profile_images/<?php echo $row['profile_image_file']; ?>" height="100px"></p>
 <?php } ?>
 </div>
 <?php endforeach; ?>
@@ -42,7 +42,10 @@ $pro_rows = $sth->fetchAll();
 $dbh2 = new PDO('mysql:host=database-1.chequt3mp7ws.us-east-1.rds.amazonaws.com;dbname=bord','admin','t38byuao20');
 
 //掲示板情報を取得
-$sth=$dbh2->prepare('SELECT bbs.name, bbs.body, bbs.created_at, bbs.filename FROM bord.bbs LEFT OUTER JOIN user.login ON bord.bbs.id = user.login.id');
+$sth=$dbh2->prepare(
+	'SELECT x.name, x.body, x.created_at, x.filename, y.profile_image_file
+	FROM bord.bbs as x 
+	LEFT OUTER JOIN user.login as y ON x.name = y.name');
 $sth->execute();
 $rows = $sth->fetchALL();
 //var_dump($rows);
@@ -59,13 +62,9 @@ foreach($rows as $row):
 	<span><?php echo($_SESSION['login_user']); ?></span>
 	(登校日：<?php echo $row['created_at']; ?>)
 
-	<?php foreach($pro_rows as $row2): ?>
 	<div>
-	<?php if(!empty($row2['filename'])) { ?>
-	<p> <img src="/static/profile_images/<?php echo $row2['filename']; ?>" height="20px"></p>
-	<?php } ?>
+	<p> <img src="/static/profile_images/<?php echo $row['profile_image_file']; ?>" height="50px"></p>
 	</div>
-	<?php endforeach; ?>
 
 	<p><?php echo $row['body']; ?></p>
 	<?php if(!empty($row['filename'])) : ?>

@@ -1,10 +1,10 @@
 <?php session_start();
 //	var_dump($_SESSION['login_user']);
 ?>
-<a href="register.php">会員登録</a>
 
 <?php if(null === $_SESSION['login_user']): ?>
-	<a href="login.php">ログイン</a><br>
+	<a href="login.php">ログイン</a>
+	<a href="register.php">会員登録</a>
 <?php else:?>
 	<a href="logout.php">ログアウト</a>
 	<a href="profile.php">マイページ</a>
@@ -41,7 +41,7 @@ $rows = $sth->fetchAll();
 	
 	<div>
 	<?php if(!empty($row['profile_image_file'])) { ?>
-		<p> <img src="/static/profile_images/<?php echo $row['profile_image_file']; ?>" height="20px"></p>
+		<p> <img src="/static/profile_images/<?php echo $row['profile_image_file']; ?>" height="50px"></p>
 	<?php } ?>
 
 	<p><?php echo $row['body']; ?></p>
