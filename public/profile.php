@@ -4,8 +4,6 @@ session_start();
 $dbh = new PDO('mysql:host=database-1.chequt3mp7ws.us-east-1.rds.amazonaws.com;dbname=user','admin','t38byuao20');
 
 $image_path = null;
-
-//$sth=$dbh->prepare('SELECT name, body, created_at, filename FROM bbs ORDER BY id ASC');
  //アイコン情報を取得
 $sth=$dbh->prepare('SELECT profile_image_file FROM login WHERE name = ?');
 $params = [];	
@@ -13,8 +11,6 @@ $params[] = $_SESSION['login_user'];
 $sth->execute($params);
 
 $pro_rows = $sth->fetchAll();
-//var_dump($pro_rows);
-//var_dump($_SESSION['login_user']);
 
 ?>
 <h1>マイページ</h1>
@@ -41,14 +37,13 @@ $pro_rows = $sth->fetchAll();
 //の中身を取得i
 $dbh2 = new PDO('mysql:host=database-1.chequt3mp7ws.us-east-1.rds.amazonaws.com;dbname=bord','admin','t38byuao20');
 
-//掲示板情報を取得
+//掲示板情報とアイコン情報を取得
 $sth=$dbh2->prepare(
 	'SELECT x.name, x.body, x.created_at, x.filename, y.profile_image_file
 	FROM bord.bbs as x 
 	LEFT OUTER JOIN user.login as y ON x.name = y.name');
 $sth->execute();
 $rows = $sth->fetchALL();
-//var_dump($rows);
 
 ?>
 <a href="read.php">トップへ戻る</a>

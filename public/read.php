@@ -14,42 +14,37 @@
 <?php endif; ?>
 <hr>
 <?php
-$dbh = new PDO('mysql:host=database-1.chequt3mp7ws.us-east-1.rds.amazonaws.com;dbname=user','admin','t38byuao20');
-
-//var_dump($_SESSION['login_user']);
 //接続$dbh = PDO()
 $dbh2 = new  PDO('mysql:host=database-1.chequt3mp7ws.us-east-1.rds.amazonaws.com;dbname=bord','admin','t38byuao20');
 
-//行の中身取得
+//行の中身をアイコン画像と共に取得
 $sth=$dbh2->prepare(
-	'SELECT x.name, x.body, x.created_at, x.filename, y.profile_image_file 
-	FROM bord.bbs as x
-	LEFT OUTER JOIN user.login as y ON x.name = y.name'
+	'SELECT x.name, x.body, x.created_at, x.filename, y.profile_image_file FROM bord.bbs as x LEFT OUTER JOIN user.login as y ON x.name = y.name'
 );
 
 $sth->execute();
 $rows = $sth->fetchAll();
 
-//var_dump($rows);
-?>
-<?php  foreach($rows as $row): ?>
 
+foreach($rows as $row):
+?>
 <div>
 	<span><?php if($row['name']) {echo $row['name'];} else{echo "名無し殿";} ?>
-	(登校日: <?php echo $row['created_at']; ?>)
+	(投稿日時: <?php echo $row['created_at']; ?>)
 	</span>
 	
 	<div>
-	<?php if(!empty($row['profile_image_file'])) { ?>
-		<p> <img src="/static/profile_images/<?php echo $row['profile_image_file']; ?>" height="50px"></p>
-	<?php } ?>
+	<?php if(!empty($row['profile_image_file'])): ?>
+		<img src="/static/profile_images/<?php echo $row['profile_image_file']; ?>" height="50px">
+	<?php endif; ?>
 
 	<p><?php echo $row['body']; ?></p>
-	<?php if(!empty($row['filename'])) { ?>
+	<?php if(!empty($row['filename'])): ?>
 	<p> <img src="/static/images/<?php echo $row['filename']?>" height="200px"></p>
-	<?php } ?>
+	<?php endif; ?>
 </div>
 <hr>
+
 <?php endforeach; ?>
 
 <?php if(!empty($_SESSION['login_user'])): ?>

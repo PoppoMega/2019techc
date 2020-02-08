@@ -1,10 +1,8 @@
 <?php
 session_start();
-//echo "あほ　く　さ";
-//
+
 if(null !== $_SESSION['login_user']){
 	//画像を取得
-	//var_dump($_SESSION['login_user']);
 	$upload_image = $_FILES['image'];
 	$ext = pathinfo($upload_image['name'],PATHINFO_EXTENSION);
 	//ファイル名決め	
@@ -13,33 +11,18 @@ if(null !== $_SESSION['login_user']){
 	$image_filepath = '/src/2019techc/public/static/profile_images/'.$image_filename;
 	//表示用のパスを設定して突っ込む	
 	move_uploaded_file($upload_image['tmp_name'],$image_filepath);
-	
-	$_SESSION['image_file'] = $_SESSION['login_user'];
-
-	$user_name = $_SESSION['login_user'] ;	
 	//DB接続
 	$dbh = new PDO('mysql:host=database-1.chequt3mp7ws.us-east-1.rds.amazonaws.com;dbname=user','admin','t38byuao20');
 	$image_path = null;
 	
-	//idを取得
-	
-	$select_id = $dbh->prepare('SELECT id FROM login WHERE name = (:name)');
-	$select_id->execute(array(
-		':name' => $user_name,
-	));
-	$id = $select_id->fetchAll();	
-//	var_dump($id[0]);
-//	var_dump($user_id);
-//exit();	
 	//画像を入れ込む
 	$insert_sth = $dbh->prepare('UPDATE login SET profile_image_file=(:filename) WHERE name = (:name)');
 	//INSERT
 	$insert_sth->execute(array(
 		':filename' => $image_filename,
-		':name' => $user_name,
+		':name' => $_SESSION['login_user'],
 	));
 	//処理が完了したので戻す
-//	var_dump($insert_sth);
 	header("Location: ./profile.php");
 }else{
 	header("Location: ./profile.php");

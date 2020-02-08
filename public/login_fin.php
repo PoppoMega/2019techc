@@ -18,17 +18,6 @@ $params[] = $name;
 
 $stmt->execute($params);
 
-$rows = $stmt->fetchAll();
-/*ーザーIDも取得
-$select_id = $dbh->prepare('SELECT id FROM login WHERE name = ?');
-$select_id->execute($params);
-$id = $select_id;
-//var_dump($id);
-//var_dump($stmt);
-//exit();
- */
-//$id = null;
-//データベースに登録しているものと比較
 foreach($rows as $row){
 	$password_hash = $row['password'];
 
@@ -36,10 +25,10 @@ foreach($rows as $row){
 	if(password_verify($pw, $password_hash)){
 		session_start();
 		session_regenerate_id(true);
+		//証を付与し、戻す
 		$_SESSION['login_user'] = $name;
 		header("HTTP/1.1 302 Found");
 		header("Location: ./read.php");
-	//	var_dump($_SESSION['login_user']);
 		return;
 	}
 	header("HTTP/1.1 302 Found");

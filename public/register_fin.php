@@ -1,11 +1,10 @@
 <?php
-/*---長さや、空だった場合の処理---*/
+//エラーフラグ設置
 $error_flag = [];
 
 //データ取得
 $params = ['name','pw','pw2'];
 $data = [];
-
 foreach($params as $p){
 	$data[$p] = (string)@$_POST[$p];
 }
